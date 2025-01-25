@@ -15,22 +15,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
+const create_trail_dto_1 = require("./dto/create-trail.dto");
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
     }
-    getHello(message) {
-        return this.appService.getHello(message);
+    getAllTrails() {
+        return this.appService.getTrails();
+    }
+    async createTrail(createTrailDto) {
+        return this.appService.createTrail(createTrailDto);
     }
 };
 exports.AppController = AppController;
 __decorate([
-    (0, common_1.Get)(),
-    __param(0, (0, common_1.Query)('message')),
+    (0, common_1.Get)('/trails'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", String)
-], AppController.prototype, "getHello", null);
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "getAllTrails", null);
+__decorate([
+    (0, common_1.Post)('/trails'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_trail_dto_1.CreateTrailDto]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "createTrail", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

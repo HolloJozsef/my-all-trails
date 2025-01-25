@@ -1,0 +1,45 @@
+[
+    {
+      "id": "1",
+      "name": "Sunset Trail",
+      "description": "A scenic trail with stunning sunset views.",
+      "directions": "Start at the main park entrance and follow the blue trail markers.",
+      "lat": 39.7392,
+      "lon": -104.9903,
+      "length": "5.2",
+      "difficulty": "Moderate",
+      "rating": 4.5,
+      "estimatedTime": "2 hours",
+      "location": "Sunset Park",
+      "imageUrl": "https://images.squarespace-cdn.com/content/59026e9d6a4963fa779708ca/1560556993694-BC1O1W78UYIX0G40WNP0/LRM_EXPORT_55014892800314_20190614_173839314.jpeg?format=1500w&content-type=image%2Fjpeg"
+    },
+    {
+      "id": "2",
+      "name": "Mountain Loop",
+      "description": "A challenging loop around the mountain with great elevation.",
+      "directions": "Head to the visitor center and take the red trail markers.",
+      "lat": 39.7492,
+      "lon": -104.9823,
+      "length": "8.7",
+      "difficulty": "Hard",
+      "rating": 4.7,
+      "estimatedTime": "4 hours",
+      "location": "Mountain Peak",
+      "imageUrl": "https://www.discoverdarrington.com/wp-content/uploads/2019/06/big-four-and-pond-1024x1024.jpg"
+    },
+    {
+      "id": "3",
+      "name": "River Walk",
+      "description": "An easy trail along the river, perfect for families.",
+      "directions": "Park near the riverside and start from the north trailhead.",
+      "lat": 39.7292,
+      "lon": -104.9753,
+      "length": "2.3",
+      "difficulty": "Easy",
+      "rating": 4.2,
+      "estimatedTime": "1 hour",
+      "location": "Riverside Park",
+      "imageUrl": "https://media.istockphoto.com/id/1339751014/photo/rain-in-the-forest-vancouver-canada.jpg?s=612x612&w=0&k=20&c=9OWQKb3u7p2DpSDrxDTS7uBqawrjtuKycrcthLVNpZA="
+    }
+  ]
+  
