@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TrailsService } from './trails.service';
 import { CreateTrailDto } from '../dto/create-trail.dto';
@@ -17,6 +19,16 @@ import { Trail } from '../trail.entity';
 @Controller('trails')
 export class TrailsController {
   constructor(private readonly trailsService: TrailsService) {}
+
+  @Get(':id')
+  @ApiResponse({ status: 200, description: 'One trail', type: Trail })
+  async getTrailById(@Param('id', ParseIntPipe) id: number) {
+    const trail = await this.trailsService.getTrailById(id);
+    if (!trail) {
+      throw new NotFoundException(`Trail with ID ${id} not found`);
+    }
+    return trail;
+  }
 
   @Get()
   @ApiOperation({ summary: 'Get all trails' })

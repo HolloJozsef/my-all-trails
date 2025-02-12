@@ -10,10 +10,24 @@ import { Trail } from '../trail.entity';
 describe('TrailsService', () => {
   let service: TrailsService;
 
-  // Create an inline mock repository
+  const mockTrail: Trail = {
+    id: 1,
+    name: 'Test Trail',
+    location: 'Test Location',
+    rating: 4.5,
+    estimatedTime: '2 hours',
+    imageUrl: 'https://example.com/image.jpg',
+    description: 'A great test trail',
+    directions: 'Turn left at the big rock',
+    lat: 40.7128,
+    lon: -74.006,
+    length: '5 miles',
+    difficulty: 'Medium',
+  };
+
   const mockRepository = {
     find: jest.fn(),
-    findOne: jest.fn(),
+    findOne: jest.fn().mockResolvedValue(mockTrail),
     create: jest.fn(),
     save: jest.fn(),
     delete: jest.fn(),
@@ -31,11 +45,9 @@ describe('TrailsService', () => {
     }).compile();
 
     service = module.get<TrailsService>(TrailsService);
-    //const repository = module.get<Repository<Trail>>(getRepositoryToken(Trail));
   });
 
   afterEach(() => {
-    // Clear all mocks after each test
     jest.clearAllMocks();
   });
 
@@ -46,6 +58,23 @@ describe('TrailsService', () => {
       const result = await service.getTrails();
       expect(result).toEqual(trailsArray);
       expect(mockRepository.find).toHaveBeenCalled();
+    });
+  });
+
+  describe('getTrailById', () => {
+    it('should return a trail when given a valid id', async () => {
+      const trail = await service.getTrailById(1);
+      expect(trail).toEqual(mockTrail);
+      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
+    });
+
+    it('should return null if no trail is found', async () => {
+      jest.spyOn(mockRepository, 'findOne').mockResolvedValue(null);
+      const trail = await service.getTrailById(999);
+      expect(trail).toBeNull();
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 999 },
+      });
     });
   });
 

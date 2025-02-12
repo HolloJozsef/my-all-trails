@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { addTrail } from "../../../api/api";
 
 interface AddTrailModalProps {
@@ -19,6 +19,8 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
     length: "1",
     difficulty: "Easy",
   });
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,12 +43,27 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
     }
   };
 
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [onClose]);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-[400px] shadow-lg">
+      <div
+        ref={modalRef}
+        className="bg-white rounded-lg p-6 w-[400px] shadow-lg"
+      >
         <h2 className="text-lg font-semibold mb-4">Add New Trail</h2>
 
-        {/* Form */}
         <div className="space-y-4">
           <input
             type="text"

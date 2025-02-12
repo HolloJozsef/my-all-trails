@@ -28,6 +28,10 @@ export class TrailsService {
     return this.trailRepository.find();
   }
 
+  async getTrailById(id: number): Promise<Trail> {
+    return this.trailRepository.findOne({ where: { id } });
+  }
+
   async createTrail(createTrailDto: CreateTrailDto): Promise<Trail> {
     try {
       const trail = this.trailRepository.create(createTrailDto);

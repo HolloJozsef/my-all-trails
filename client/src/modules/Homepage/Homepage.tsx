@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import "./components/SearchBar.css";
 import SearchBar from "./components/SearchBar";
 import axios from "axios";
-import NearbyTrails from "./components/NearbyTrailList";
 import NearbyTrailList from "./components/NearbyTrailList";
 import AddTrailModal from "./components/AddTrailModal";
 
 const Homepage = () => {
-  const [data, setData] = useState(null); // To store the fetched data
-  const [loading, setLoading] = useState(false); // To track loading state
-  const [error, setError] = useState(''); // To store any error
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(''); 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -20,15 +18,13 @@ const Homepage = () => {
       .get(`http://localhost:8080?message=${query}`)
       .then((response) => {
         console.log(response);
-        setData(response.data); // Save the fetched data
-        setLoading(false); // Set loading to false once the request is completed
+        setLoading(false); 
       })
       .catch((err) => {
-        setError("Error fetching data"); // Handle errors
+        setError("Error fetching data"); 
         setLoading(false);
       });
   };
-  // Show loading indicator or error message
   if (loading) {
     return <div>Loading...</div>;
   }
