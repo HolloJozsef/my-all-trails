@@ -6,11 +6,12 @@ export const addTrail = async (trail: Partial<Trail>): Promise<void> => {
   const response = await fetch(`${API_BASE_URL}/trails`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin':'http://localhost:3000',
     },
     body: JSON.stringify(trail),
   });
-
+console.log(trail)
   if (!response.ok) {
     throw new Error('Failed to add trail');
   }

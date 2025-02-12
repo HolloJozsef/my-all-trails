@@ -3,7 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Trail } from './trail.entity';
+import { TrailsModule } from './trails/trails.module';
 import * as dotenv from 'dotenv';
+import { TrailsService } from './trails/trails.service';
+import { TrailsController } from './trails/trails.controller';
 
 dotenv.config();
 @Module({
@@ -19,8 +22,9 @@ dotenv.config();
       synchronize: true,
     }),
     TypeOrmModule.forFeature([Trail]),
+    TrailsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, TrailsController],
+  providers: [AppService, TrailsService],
 })
 export class AppModule {}

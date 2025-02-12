@@ -13,22 +13,29 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
     estimatedTime: "",
     imageUrl: "",
     description: "",
+    directions: "",
+    lat: 0,
+    lon: 0,
+    length: "1",
+    difficulty: "Easy",
   });
-
+  const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: false });
   };
 
   const handleRatingChange = (rating: number) => {
     setFormData({ ...formData, rating });
+    setErrors({ ...errors, rating: false });
   };
 
   const handleSubmit = async () => {
     try {
       await addTrail(formData);
       console.log("Trail added successfully");
-      onClose(); // Close the modal after successful submission
+      onClose();
     } catch (error) {
       console.error("Error adding trail:", error);
     }
@@ -45,7 +52,9 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
             type="text"
             name="name"
             placeholder="Trail Name"
-            className="w-full border p-2 rounded"
+            className={`w-full border p-2 rounded ${
+              errors.name ? "border-red-500" : "border-gray-300"
+            }`}
             value={formData.name}
             onChange={handleInputChange}
           />
@@ -83,7 +92,7 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 pt-4 pl-2">
           <span className="text-gray-700">Rating:</span>
           <div className="flex space-x-1">
             {[1, 2, 3, 4, 5].map((star) => (
