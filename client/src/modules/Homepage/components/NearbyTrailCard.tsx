@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { deleteTrail } from "../../../api/api";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-const NearbyTrailCard: React.FC<{ trail: Trail }> = ({ trail }) => {
+const NearbyTrailCard: React.FC<{ trail: Trail,  onDelete: (id: string) => void;
+}> = ({ trail,onDelete }) => {
   const [imageSrc, setImageSrc] = useState(trail.imageUrl);
   const navigate = useNavigate();
 
@@ -22,7 +23,7 @@ const NearbyTrailCard: React.FC<{ trail: Trail }> = ({ trail }) => {
     e.stopPropagation(); // Prevent the click event from navigating
     try {
       await deleteTrail(trail.id);
-      window.location.reload();
+      onDelete(trail.id)
     } catch (error) {
       console.error("Error deleting trail:", error);
     }

@@ -26,6 +26,11 @@ const NearbyTrailList: React.FC = () => {
     fetchTrails();
   }, []);
 
+  const handleDelete = (id: string) => {
+    setTrails((prev) => prev.filter((trail) => trail.id !== id));
+  };
+
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -38,7 +43,7 @@ const NearbyTrailList: React.FC = () => {
     <div className="flex justify-center overflow-x-auto p-4 space-x-6">
       <div className="flex flex-nowrap space-x-6"> {/* Keep items in a single row */}
         {trails.map((trail) => (
-          <NearbyTrailCard key={trail.id} trail={trail} />
+          <NearbyTrailCard key={trail.id} trail={trail} onDelete={handleDelete} />
         ))}
       </div>
     </div>
