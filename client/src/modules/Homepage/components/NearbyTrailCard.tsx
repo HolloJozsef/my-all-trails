@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Trail } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
+import { deleteTrail } from "../../../api/api";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const NearbyTrailCard: React.FC<{ trail: Trail }> = ({ trail }) => {
   const [imageSrc, setImageSrc] = useState(trail.imageUrl);
@@ -16,9 +18,19 @@ const NearbyTrailCard: React.FC<{ trail: Trail }> = ({ trail }) => {
     navigate(`/trails/${trail.id}`);
   };
 
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the click event from navigating
+    try {
+      await deleteTrail(trail.id);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting trail:", error);
+    }
+  };
+
   return (
     <div
-      className="bg-white shadow-md rounded-lg overflow-hidden w-40 cursor-pointer"
+      className="bg-white shadow-md rounded-lg overflow-hidden w-40 cursor-pointer flex flex-col h-full"
       onClick={handleClick}
     >
       <img
@@ -27,7 +39,7 @@ const NearbyTrailCard: React.FC<{ trail: Trail }> = ({ trail }) => {
         alt={trail.name}
         onError={handleImageError}
       />
-      <div className="p-4">
+      <div className="p-4 flex-grow">
         <p className="text-xl ">{trail.name}</p>
         <p className="text-sm text-gray-500">{trail.location}</p>
         <div className="flex items-center space-x-2 my-2">
@@ -40,6 +52,15 @@ const NearbyTrailCard: React.FC<{ trail: Trail }> = ({ trail }) => {
         <p className="text-sm text-gray-500">
           Estimated Time: {trail.estimatedTime}
         </p>
+      </div>
+      <div className="sticky bottom-0 bg-white p-2 flex justify-center">
+        <button
+          className="text-red-500 hover:text-red-700"
+          onClick={handleDelete}
+          aria-label="Delete Trail"
+        >
+          <TrashIcon className="h-6 w-6" />
+        </button>
       </div>
     </div>
   );

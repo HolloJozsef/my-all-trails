@@ -16,3 +16,16 @@ console.log(trail)
     throw new Error('Failed to add trail');
   }
 };
+
+export const deleteTrail = async (trailId: string): Promise<void> => {
+  const response = await fetch(`${API_BASE_URL}/trails/${trailId}`, {
+    method: 'Delete',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin':'http://localhost:3000',
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Failed to add trail');
+  }
+};

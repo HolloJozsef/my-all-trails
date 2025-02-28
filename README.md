@@ -23,3 +23,15 @@ To get started with TrailExplorer, clone the repository, install the dependencie
 1. Clone the repository:
    ```bash
    git clone https://github.com/HolloJozsef/my-all-trails.git
+
+2. Start the server
+   ```bash
+   cd server
+   npm run start:dev
+   ```
+
+3. Start the client
+   ```bash
+   cd client
+   npm start
+   ```
