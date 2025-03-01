@@ -29,3 +29,16 @@ export const deleteTrail = async (trailId: string): Promise<void> => {
     throw new Error('Failed to add trail');
   }
 };
+
+export async function fetchTrails() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/trails`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch trails");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching trails:", error);
+    throw error;
+  }
+}

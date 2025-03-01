@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'; // Importing the left arrow icon from Heroicons
+import { ArrowLeftIcon } from "@heroicons/react/24/outline"; // Importing the left arrow icon from Heroicons
+import TrailDetailsSkeleton from "./TrailDetailsSkeleton";
 
 const TrailDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +28,7 @@ const TrailDetails: React.FC = () => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <TrailDetailsSkeleton />;
   }
 
   if (error) {
@@ -50,7 +51,9 @@ const TrailDetails: React.FC = () => {
         style={{ backgroundImage: `url(${trail.imageUrl})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40 flex justify-center items-center">
-          <h1 className="text-4xl font-bold text-white text-center">{trail.name}</h1>
+          <h1 className="text-4xl font-bold text-white text-center">
+            {trail.name}
+          </h1>
         </div>
       </div>
 
