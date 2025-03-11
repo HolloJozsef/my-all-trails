@@ -1,39 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"; // Importing the left arrow icon from Heroicons
-import TrailDetailsSkeleton from "./TrailDetailsSkeleton";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchTrail = async (id: string) => {
+  const res = await axios.get(`http://localhost:8080/trails/${id}`);
+  return res.data;
+};
 
 const TrailDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [trail, setTrail] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchTrailData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/trails/${id}`);
-        setTrail(response.data);
-      } catch (err) {
-        setError("Error fetching trail data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTrailData();
-  }, [id]);
-
-  if (loading) {
-    return <TrailDetailsSkeleton />;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  const { data } = useQuery({
+    queryKey: ["trail", id],
+    queryFn: () => fetchTrail(id!),
+    suspense: true, 
+  });
 
   return (
     <div className="bg-gray-50 min-h-screen pb-8">
@@ -48,11 +33,11 @@ const TrailDetails: React.FC = () => {
 
       <div
         className="relative h-96 bg-cover bg-center"
-        style={{ backgroundImage: `url(${trail.imageUrl})` }}
+        style={{ backgroundImage: `url(${data.imageUrl})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40 flex justify-center items-center">
           <h1 className="text-4xl font-bold text-white text-center">
-            {trail.name}
+            {data.name}
           </h1>
         </div>
       </div>
@@ -61,33 +46,33 @@ const TrailDetails: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <div className="flex justify-between">
             <div>
-              <p className="text-xl font-semibold">{trail.location}</p>
+              <p className="text-xl font-semibold">{data.location}</p>
               <p className="text-sm text-gray-500">
-                Difficulty: {trail.difficulty} | Length: {trail.length}
+                Difficulty: {data.difficulty} | Length: {data.length}
               </p>
             </div>
             <div className="flex items-center space-x-2">
               <span className="text-yellow-400">
-                {"⭐".repeat(Math.floor(trail.rating))}
-                {"☆".repeat(5 - Math.floor(trail.rating))}
+                {"⭐".repeat(Math.floor(data.rating))}
+                {"☆".repeat(5 - Math.floor(data.rating))}
               </span>
-              <span className="text-sm text-gray-500">{trail.rating}</span>
+              <span className="text-sm text-gray-500">{data.rating}</span>
             </div>
           </div>
 
           <div className="mt-4">
             <h2 className="text-2xl font-semibold">Description</h2>
-            <p className="text-sm text-gray-700 mt-2">{trail.description}</p>
+            <p className="text-sm text-gray-700 mt-2">{data.description}</p>
           </div>
 
           <div className="mt-6">
             <h2 className="text-2xl font-semibold">Directions</h2>
-            <p className="text-sm text-gray-700 mt-2">{trail.directions}</p>
+            <p className="text-sm text-gray-700 mt-2">{data.directions}</p>
           </div>
 
           <div className="mt-6">
             <h2 className="text-2xl font-semibold">Estimated Time</h2>
-            <p className="text-sm text-gray-700 mt-2">{trail.estimatedTime}</p>
+            <p className="text-sm text-gray-700 mt-2">{data.estimatedTime}</p>
           </div>
 
           <div className="flex justify-end mt-6">

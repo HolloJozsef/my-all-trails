@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NearbyTrailCard from "./NearbyTrailCard";
 import { Trail } from "../../../types/types";
-import { fetchTrails } from "../../../api/api";
+import { fetchAllTrails } from "../../../api/api";
 import NearbyTrailCardSkeleton from "./NearbyTrailCardSkeleton";
 
 const NearbyTrailList: React.FC = () => {
@@ -12,7 +12,7 @@ const NearbyTrailList: React.FC = () => {
   useEffect(() => {
     const getTrails = async () => {
       try {
-        const trails = await fetchTrails();
+        const trails = await fetchAllTrails();
         setTrails(trails);
       } catch (err) {
         setError(String(err));

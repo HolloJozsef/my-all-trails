@@ -30,7 +30,7 @@ export const deleteTrail = async (trailId: string): Promise<void> => {
   }
 };
 
-export async function fetchTrails() {
+export async function fetchAllTrails() {
   try {
     const response = await fetch(`${API_BASE_URL}/trails`);
     if (!response.ok) {
