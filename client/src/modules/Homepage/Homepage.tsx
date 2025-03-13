@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import "./components/SearchBar.css";
 import SearchBar from "./components/SearchBar";
 import axios from "axios";
 import NearbyTrailList from "./components/NearbyTrailList";
 import AddTrailModal from "./components/AddTrailModal";
+import Spinner from "../Core/Spinner";
 
 const Homepage = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(''); 
+  const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -18,10 +19,10 @@ const Homepage = () => {
       .get(`http://localhost:8080?message=${query}`)
       .then((response) => {
         console.log(response);
-        setLoading(false); 
+        setLoading(false);
       })
       .catch((err) => {
-        setError("Error fetching data"); 
+        setError("Error fetching data");
         setLoading(false);
       });
   };
@@ -43,11 +44,11 @@ const Homepage = () => {
           +
         </button>
       </div>
-      <NearbyTrailList/>
+      <Suspense  fallback={<Spinner />}>
+        <NearbyTrailList />
+      </Suspense>
       {isModalOpen && <AddTrailModal onClose={handleCloseModal} />}
-
-      </>
-      
+    </>
   );
 };
 

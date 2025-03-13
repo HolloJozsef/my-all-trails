@@ -1,65 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import NearbyTrailCard from "./NearbyTrailCard";
 import { Trail } from "../../../types/types";
-import { fetchAllTrails } from "../../../api/api";
-import NearbyTrailCardSkeleton from "./NearbyTrailCardSkeleton";
+import { deleteTrail, fetchAllTrails } from "../../../api/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const NearbyTrailList: React.FC = () => {
-  const [trails, setTrails] = useState<Trail[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const getTrails = async () => {
-      try {
-        const trails = await fetchAllTrails();
-        setTrails(trails);
-      } catch (err) {
-        setError(String(err));
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data, } = useQuery({
+    queryKey: ["trails"],
+    queryFn: () => fetchAllTrails(),
+    suspense: true,
+    refetchOnMount: true,
+    staleTime: 0,
+  });
 
-    getTrails();
-  }, []);
-
+  const deleteMutation = useMutation({
+    mutationFn: deleteTrail,
+    onSuccess: (_, deletedId) => {
+      queryClient.setQueryData<Trail[]>(["trails"], (oldData) => {
+        if (!oldData) return [];
+        return oldData.filter((trail) => trail.id !== deletedId);
+      });
+    },
+    onError: (error: Error) => {
+      console.error("Error deleting trail:", error);
+    },
+  });
   const handleDelete = (id: string) => {
-    setTrails((prev) => prev.filter((trail) => trail.id !== id));
+    deleteMutation.mutate(id);
   };
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex justify-center items-center min-h-screen">
-  //       <span className="text-xl">Loading...</span>
-  //     </div>
-  //   );
-  // }
-
-  if (error) {
-    return (
-      <div className="flex justify-center overflow-x-auto p-4 space-x-6">
-        <div className="flex flex-nowrap space-x-6 bg-red-100 rounded-lg p-6">
-          <span className="text-xl text-red-500">{error}</span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex justify-center overflow-x-auto p-4 space-x-6">
       <div className="flex flex-nowrap space-x-6">
-        {loading
-          ? Array.from({ length: 4 }).map((_, index) => (
-              <NearbyTrailCardSkeleton key={index} />
-            ))
-          : trails.map((trail) => (
-              <NearbyTrailCard
-                key={trail.id}
-                trail={trail}
-                onDelete={handleDelete}
-              />
-            ))}
+        {data.map((data: Trail) => (
+          <NearbyTrailCard key={data.id} trail={data} onDelete={handleDelete} />
+        ))}
       </div>
     </div>
   );

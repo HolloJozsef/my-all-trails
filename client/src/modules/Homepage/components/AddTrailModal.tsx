@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { addTrail } from "../../../api/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface AddTrailModalProps {
   onClose: () => void;
@@ -32,12 +33,23 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
     setFormData({ ...formData, rating });
     setErrors({ ...errors, rating: false });
   };
+  const queryClient = useQueryClient();
 
+  // Mutation for adding a trail
+  const addMutation = useMutation({
+    mutationFn: addTrail,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["trails"]);
+      onClose(); 
+    },
+    onError: (error: Error) => {
+      console.error("Error adding trail:", error);
+    },
+  });
   const handleSubmit = async () => {
     try {
-      await addTrail(formData);
+      await addMutation.mutateAsync(formData); // Use the mutateAsync method to handle async submission
       console.log("Trail added successfully");
-      onClose();
     } catch (error) {
       console.error("Error adding trail:", error);
     }

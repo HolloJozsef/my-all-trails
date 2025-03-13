@@ -1,44 +1,33 @@
-import { Trail } from '../types/types';
+import axios from "axios";
+import { Trail } from "../types/types";
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = "http://localhost:8080";
 
 export const addTrail = async (trail: Partial<Trail>): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/trails`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Access-Control-Allow-Origin':'http://localhost:3000',
-    },
-    body: JSON.stringify(trail),
-  });
-console.log(trail)
-  if (!response.ok) {
-    throw new Error('Failed to add trail');
+  try {
+    const response = await axios.post(`${API_BASE_URL}/trails`, trail, {
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "http://localhost:3000",
+      },
+    });
+    console.log(response.data); 
+  } catch (error) {
+    console.error("Failed to add trail:", error);
+    throw error; 
   }
 };
 
 export const deleteTrail = async (trailId: string): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/trails/${trailId}`, {
-    method: 'Delete',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Access-Control-Allow-Origin':'http://localhost:3000',
-    },
-  });
-  if (!response.ok) {
-    throw new Error('Failed to add trail');
-  }
+  axios.delete(`${API_BASE_URL}/trails/${trailId}`);
 };
 
 export async function fetchAllTrails() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/trails`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch trails");
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching trails:", error);
-    throw error;
-  }
+  const res = await axios.get(`${API_BASE_URL}/trails`);
+  return res.data;
 }
+
+export const fetchTrail = async (id: string) => {
+  const res = await axios.get(`http://localhost:8080/trails/${id}`);
+  return res.data;
+};

@@ -1,13 +1,8 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"; // Importing the left arrow icon from Heroicons
 import { useQuery } from "@tanstack/react-query";
-
-const fetchTrail = async (id: string) => {
-  const res = await axios.get(`http://localhost:8080/trails/${id}`);
-  return res.data;
-};
+import { fetchTrail } from "../../../api/api";
 
 const TrailDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

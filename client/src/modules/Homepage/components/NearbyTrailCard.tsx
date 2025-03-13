@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Trail } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
-import { deleteTrail } from "../../../api/api";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
 const NearbyTrailCard: React.FC<{ trail: Trail,  onDelete: (id: string) => void;
@@ -19,14 +18,9 @@ const NearbyTrailCard: React.FC<{ trail: Trail,  onDelete: (id: string) => void;
     navigate(`/trails/${trail.id}`);
   };
 
-  const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent the click event from navigating
-    try {
-      await deleteTrail(trail.id);
-      onDelete(trail.id)
-    } catch (error) {
-      console.error("Error deleting trail:", error);
-    }
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(trail.id);
   };
 
   return (
