@@ -11,8 +11,8 @@ This repository aims to replicate the well known All Trails application
 
 ## Tech Stack
 
-- **Frontend**: React, TypeScript, Axios, Zustand
-- **Backend**: Nest.js, TypeScript, PostgreSQL 
+- **Frontend**: React, React Query, TypeScript, Axios, Zustand, Tailwind
+- **Backend**: Nest.js, TypeScript, PostgreSQL, Jest
 
 ## Getting Started
 
