@@ -17,7 +17,7 @@ const App = () => {
         <Route
           path="/trails/:id"
           element={
-            <Suspense fallback={<TrailDetailsSkeleton/>}>
+            <Suspense fallback={<TrailDetailsSkeleton />}>
               <TrailDetails />
             </Suspense>
           }

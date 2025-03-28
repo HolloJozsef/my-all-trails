@@ -28,6 +28,12 @@ export async function fetchAllTrails() {
 }
 
 export const fetchTrail = async (id: string) => {
-  const res = await axios.get(`http://localhost:8080/trails/${id}`);
+  const res = await axios.get(`${API_BASE_URL}/trails/${id}`);
+  return res.data;
+};
+
+export const fetchSearchSuggestions = async (query: string) => {
+  const res = await axios.get(`${API_BASE_URL}/search?message=${query}`);
+  console.log(res.data)
   return res.data;
 };

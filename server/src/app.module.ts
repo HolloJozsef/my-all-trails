@@ -7,6 +7,9 @@ import { TrailsModule } from './trails/trails.module';
 import * as dotenv from 'dotenv';
 import { TrailsService } from './trails/trails.service';
 import { TrailsController } from './trails/trails.controller';
+import { SearchController } from './search/search.controller';
+import { SearchService } from './search/search.service';
+import { SearchModule } from './search/search.module';
 
 dotenv.config();
 @Module({
@@ -23,8 +26,9 @@ dotenv.config();
     }),
     TypeOrmModule.forFeature([Trail]),
     TrailsModule,
+    SearchModule,
   ],
-  controllers: [AppController, TrailsController],
-  providers: [AppService, TrailsService],
+  controllers: [AppController, TrailsController, SearchController],
+  providers: [AppService, TrailsService, SearchService],
 })
 export class AppModule {}

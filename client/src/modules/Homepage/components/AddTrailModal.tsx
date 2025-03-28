@@ -12,7 +12,8 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
     location: "",
     rating: 0,
     estimatedTime: "",
-    imageUrl: "",
+    imageUrl:
+      "https://i.pinimg.com/736x/ae/96/97/ae9697172f855c03b91844ceefdbe46b.jpg",
     description: "",
     directions: "",
     lat: 0,
@@ -40,7 +41,7 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
     mutationFn: addTrail,
     onSuccess: () => {
       queryClient.invalidateQueries(["trails"]);
-      onClose(); 
+      onClose();
     },
     onError: (error: Error) => {
       console.error("Error adding trail:", error);

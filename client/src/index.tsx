@@ -9,8 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      suspense: true,
-      useErrorBoundary: true,
+      useErrorBoundary: true, //Error if I use suspense, why?
     },
   },
 });
