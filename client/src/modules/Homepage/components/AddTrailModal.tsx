@@ -12,8 +12,7 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
     location: "",
     rating: 0,
     estimatedTime: "",
-    imageUrl:
-      "https://i.pinimg.com/736x/ae/96/97/ae9697172f855c03b91844ceefdbe46b.jpg",
+    imageUrl: "",
     description: "",
     directions: "",
     lat: 0,
@@ -49,8 +48,10 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
   });
   const handleSubmit = async () => {
     try {
+      if (formData.imageUrl === "")
+        formData.imageUrl =
+          "https://i.pinimg.com/736x/ae/96/97/ae9697172f855c03b91844ceefdbe46b.jpg";
       await addMutation.mutateAsync(formData); // Use the mutateAsync method to handle async submission
-      console.log("Trail added successfully");
     } catch (error) {
       console.error("Error adding trail:", error);
     }

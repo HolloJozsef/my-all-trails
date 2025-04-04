@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import Homepage from "./modules/Homepage/Homepage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SearchResults from "./modules/SearchResult/SearchResult";
@@ -9,6 +9,14 @@ const TrailDetails = React.lazy(
 );
 
 const App = () => {
+  useEffect(() => {
+    let modalRoot = document.getElementById("modal-root");
+    if (!modalRoot) {
+      modalRoot = document.createElement("div");
+      modalRoot.id = "modal-root";
+      document.body.appendChild(modalRoot);
+    }
+  }, []);
   return (
     <BrowserRouter>
       <Routes>

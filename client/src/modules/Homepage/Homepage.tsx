@@ -4,6 +4,7 @@ import SearchBar from "./components/SearchBar";
 import NearbyTrailList from "./components/NearbyTrailList";
 import AddTrailModal from "./components/AddTrailModal";
 import Spinner from "../Core/Spinner";
+import { createPortal } from "react-dom";
 
 const Homepage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -30,8 +31,11 @@ const Homepage = () => {
       <Suspense fallback={<Spinner />}>
         <NearbyTrailList />
       </Suspense>
-
-      {isModalOpen && <AddTrailModal onClose={handleCloseModal} />}
+      {isModalOpen &&
+        createPortal(
+          <AddTrailModal onClose={handleCloseModal} />,
+          document.getElementById("modal-root")!
+        )}
     </>
   );
 };
