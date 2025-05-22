@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateTrailDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateTrailDto {
 }
@@ -17,24 +18,44 @@ exports.CreateTrailDto = CreateTrailDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)({
+        example: 'Sunset Trail',
+        description: 'The name of the trail',
+    }),
     __metadata("design:type", String)
 ], CreateTrailDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)({
+        example: 'A beautiful sunset trail with scenic views.',
+        description: 'Description of the trail',
+    }),
     __metadata("design:type", String)
 ], CreateTrailDto.prototype, "description", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)({
+        example: '',
+        description: 'directions',
+    }),
     __metadata("design:type", String)
 ], CreateTrailDto.prototype, "directions", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, swagger_1.ApiProperty)({
+        example: '45.54',
+        description: 'Latitude',
+    }),
     __metadata("design:type", Number)
 ], CreateTrailDto.prototype, "lat", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, swagger_1.ApiProperty)({
+        example: '45.54',
+        description: 'Longitude',
+    }),
     __metadata("design:type", Number)
 ], CreateTrailDto.prototype, "lon", void 0);
 __decorate([
@@ -44,25 +65,47 @@ __decorate([
 ], CreateTrailDto.prototype, "length", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        example: 'easy',
+        description: 'Level of dificulty',
+    }),
     __metadata("design:type", String)
 ], CreateTrailDto.prototype, "difficulty", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(1),
     (0, class_validator_1.Max)(5),
+    (0, swagger_1.ApiProperty)({
+        example: 4.5,
+        description: 'Rating out of 5',
+        minimum: 0,
+        maximum: 5,
+    }),
     __metadata("design:type", Number)
 ], CreateTrailDto.prototype, "rating", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)({
+        example: '2 hours',
+        description: 'Estimated time to complete the trail',
+    }),
     __metadata("design:type", String)
 ], CreateTrailDto.prototype, "estimatedTime", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        example: 'Austria',
+        description: 'Country/Region',
+    }),
     __metadata("design:type", String)
 ], CreateTrailDto.prototype, "location", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        example: 'https://example.com/trail.jpg',
+        description: 'Image URL of the trail',
+    }),
     __metadata("design:type", String)
 ], CreateTrailDto.prototype, "imageUrl", void 0);
 //# sourceMappingURL=create-trail.dto.js.map

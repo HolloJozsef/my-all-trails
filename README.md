@@ -24,14 +24,35 @@ To get started with TrailExplorer, clone the repository, install the dependencie
    ```bash
    git clone https://github.com/HolloJozsef/my-all-trails.git
 
-2. Start the server
+2. Start the Docker containers:
+   ```bash
+   docker-compose up --build
+
+3. Seed the database: Open a new terminal window and access the backend container:
+   ```bash
+   docker-compose exec backend sh
+   npm run seed
+   ```
+
+4. Start the server
    ```bash
    cd server
    npm run start:dev
    ```
 
-3. Start the client
+5. Start the client
    ```bash
    cd client
    npm start
    ```
+
+6. Access the application:
+   Frontend: Open http://localhost:3000 in your browser.
+   Swagger: http://localhost:8080/api/docs.
+   Docker Posgres: http://localhost:5050/
+
+7. Stopping the Containers:
+   ```bash
+   docker-compose down
+
+

@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline"; // Importing the left arrow icon from Heroicons
 import { useQuery } from "@tanstack/react-query";
 import { fetchTrail } from "../../../api/api";
+import BackButton from "../../Core/BackButton";
 
 const TrailDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,20 +12,21 @@ const TrailDetails: React.FC = () => {
   const { data } = useQuery({
     queryKey: ["trail", id],
     queryFn: () => fetchTrail(id!),
-    suspense: true, 
+    suspense: true,
   });
+
+  const handleSeeOnMap = () => {
+    navigate("/map", {
+      state: {
+        lat: data.lat,
+        lng: data.lon,
+      },
+    });
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen pb-8">
-      <div className="absolute top-4 left-4 z-10">
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-white p-2 rounded-full shadow-md hover:bg-gray-200 transition duration-300 cursor-pointer"
-        >
-          <ArrowLeftIcon className="w-6 h-6 text-gray-700" />
-        </button>
-      </div>
-
+     <BackButton />
       <div
         className="relative h-96 bg-cover bg-center"
         style={{ backgroundImage: `url(${data.imageUrl})` }}
@@ -71,8 +72,11 @@ const TrailDetails: React.FC = () => {
           </div>
 
           <div className="flex justify-end mt-6">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">
-              Share
+            <button
+              onClick={handleSeeOnMap}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            >
+              See on Map
             </button>
           </div>
         </div>

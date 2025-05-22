@@ -12,7 +12,13 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const trail_entity_1 = require("./trail.entity");
+const trails_module_1 = require("./trails/trails.module");
 const dotenv = require("dotenv");
+const trails_service_1 = require("./trails/trails.service");
+const trails_controller_1 = require("./trails/trails.controller");
+const search_controller_1 = require("./search/search.controller");
+const search_service_1 = require("./search/search.service");
+const search_module_1 = require("./search/search.module");
 dotenv.config();
 let AppModule = class AppModule {
 };
@@ -31,9 +37,11 @@ exports.AppModule = AppModule = __decorate([
                 synchronize: true,
             }),
             typeorm_1.TypeOrmModule.forFeature([trail_entity_1.Trail]),
+            trails_module_1.TrailsModule,
+            search_module_1.SearchModule,
         ],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        controllers: [app_controller_1.AppController, trails_controller_1.TrailsController, search_controller_1.SearchController],
+        providers: [app_service_1.AppService, trails_service_1.TrailsService, search_service_1.SearchService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
