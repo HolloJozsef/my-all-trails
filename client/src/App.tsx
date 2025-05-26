@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SearchResults from "./modules/SearchResult/SearchResult";
 import TrailDetailsSkeleton from "./modules/Homepage/components/TrailDetailsSkeleton";
 import MapPage from "./modules/Homepage/components/MapPage";
+import ErrorBoundary from "./modules/Core/ErrorBoundary";
 
 const TrailDetails = React.lazy(
   () => import("./modules/Homepage/components/TrailDetails")
@@ -20,19 +21,21 @@ const App = () => {
   }, []);
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/search" element={<SearchResults />} />
-        <Route path="/map" element={<MapPage />} />
-        <Route
-          path="/trails/:id"
-          element={
-            <Suspense fallback={<TrailDetailsSkeleton />}>
-              <TrailDetails />
-            </Suspense>
-          }
-        />
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route
+            path="/trails/:id"
+            element={
+              <Suspense fallback={<TrailDetailsSkeleton />}>
+                <TrailDetails />
+              </Suspense>
+            }
+          />
+        </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 };
