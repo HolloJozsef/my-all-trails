@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Trail } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, HeartIcon as OutlineHeartIcon} from "@heroicons/react/24/outline";
+import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
 import Rating from "../../Core/Rating";
 import ConfirmationDialog from "./modals/ConfirmationModal";
+import { useFavoritesStore } from "../../../store/favoriteStore";
 
 const FALLBACK_IMAGE_URL = "https://media.istockphoto.com/id/495479514/photo/viso-valley.jpg?s=612x612&w=0&k=20&c=5GsMO7BU7hZZaR0LWAOcbi-d3AVpN57u6Rq0Rse3Wqk=";
 
@@ -14,6 +16,20 @@ const NearbyTrailCard: React.FC<{ trail: Trail; onDelete: (id: string) => void; 
   const [imageSrc, setImageSrc] = useState(trail.imageUrl || FALLBACK_IMAGE_URL);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const navigate = useNavigate();
+
+  const isFavorite = useFavoritesStore(state => state.isFavorite(trail.id)); 
+  const addFavorite = useFavoritesStore(state => state.addFavorite);
+  const removeFavorite = useFavoritesStore(state => state.removeFavorite);
+
+  const handleFavoriteClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isFavorite) { 
+      removeFavorite(trail.id);
+    } else {
+      addFavorite(trail);
+    }
+  }, [isFavorite, addFavorite, removeFavorite, trail]); 
+
 
   const handleImageError = () => {
     if (imageSrc !== FALLBACK_IMAGE_URL) {
@@ -69,8 +85,18 @@ const NearbyTrailCard: React.FC<{ trail: Trail; onDelete: (id: string) => void; 
         >
           <TrashIcon className="h-6 w-6" />
         </button>
+        <button
+          className={`p-1 rounded-full hover:bg-gray-100 ${isFavorite ? 'text-red-500' : 'text-gray-400 hover:text-red-400'}`}
+          onClick={handleFavoriteClick}
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          {isFavorite ? (
+            <SolidHeartIcon className="h-6 w-6" />
+          ) : (
+            <OutlineHeartIcon className="h-6 w-6" />
+          )}
+        </button>
       </div>
-
       <ConfirmationDialog
         isOpen={showDeleteConfirmation}
         title="Confirm Deletion"
