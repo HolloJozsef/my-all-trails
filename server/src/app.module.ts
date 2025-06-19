@@ -10,6 +10,7 @@ import { TrailsController } from './trails/trails.controller';
 import { SearchController } from './search/search.controller';
 import { SearchService } from './search/search.service';
 import { SearchModule } from './search/search.module';
+import { TrailFactory } from './trails/trail.factory';
 
 dotenv.config();
 @Module({
@@ -22,13 +23,13 @@ dotenv.config();
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [Trail],
-      synchronize: true,
+      synchronize: false,
     }),
     TypeOrmModule.forFeature([Trail]),
     TrailsModule,
     SearchModule,
   ],
   controllers: [AppController, TrailsController, SearchController],
-  providers: [AppService, TrailsService, SearchService],
+  providers: [AppService, TrailsService, SearchService, TrailFactory],
 })
 export class AppModule {}

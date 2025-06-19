@@ -10,6 +10,9 @@ import { CreateTrailDto } from '../dto/create-trail.dto';
 import { UpdateTrailDto } from '../dto/update-trail.dto';
 import { Trail } from '../trail.entity';
 import { Repository } from 'typeorm';
+import { TrailFactory } from './trail.factory';
+import { ITrail } from './trails.interface';
+import { toTrailDto } from './trail.mapper';
 
 @Injectable()
 export class TrailsService {
@@ -17,6 +20,7 @@ export class TrailsService {
   constructor(
     @InjectRepository(Trail)
     private readonly trailRepository: Repository<Trail>,
+    private readonly trailFactory: TrailFactory, 
   ) {}
 
   getTrailsFromJSON(): any {
@@ -28,8 +32,12 @@ export class TrailsService {
     return this.trailRepository.find();
   }
 
-  async getTrailById(id: number): Promise<Trail> {
-    return this.trailRepository.findOne({ where: { id } });
+  async getTrailById(id: number): Promise<CreateTrailDto> {
+    const trail = await this.trailRepository.findOne({ where: { id } });
+    if (!trail) {
+      throw new NotFoundException(`Trail with id ${id} not found`);
+    }
+    return toTrailDto(trail);
   }
 
   async createTrail(createTrailDto: CreateTrailDto): Promise<Trail> {
@@ -37,10 +45,9 @@ export class TrailsService {
       const trail = this.trailRepository.create(createTrailDto);
       return await this.trailRepository.save(trail);
     } catch (error) {
-      throw new BadRequestException(`Failed to create trail: ${error}`);
+      throw new BadRequestException(`Failed to create trail: ${error.message}`);
     }
   }
-
   async updateTrail(
     id: number,
     updateTrailDto: UpdateTrailDto,

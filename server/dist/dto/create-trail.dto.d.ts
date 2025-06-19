@@ -1,3 +1,4 @@
+import { TrailType } from 'src/trails/trail-type.enum';
 export declare class CreateTrailDto {
     name: string;
     description: string;
@@ -10,4 +11,5 @@ export declare class CreateTrailDto {
     estimatedTime: string;
     location: string;
     imageUrl: string;
+    type: TrailType;
 }

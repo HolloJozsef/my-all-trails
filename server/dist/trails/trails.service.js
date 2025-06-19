@@ -19,9 +19,11 @@ const fs = require("fs");
 const path = require("path");
 const trail_entity_1 = require("../trail.entity");
 const typeorm_2 = require("typeorm");
+const trail_factory_1 = require("./trail.factory");
 let TrailsService = class TrailsService {
-    constructor(trailRepository) {
+    constructor(trailRepository, trailFactory) {
         this.trailRepository = trailRepository;
+        this.trailFactory = trailFactory;
         this.trailsFilePath = path.join(__dirname, '../data/trails.json');
     }
     getTrailsFromJSON() {
@@ -35,13 +37,12 @@ let TrailsService = class TrailsService {
         return this.trailRepository.findOne({ where: { id } });
     }
     async createTrail(createTrailDto) {
-        try {
-            const trail = this.trailRepository.create(createTrailDto);
-            return await this.trailRepository.save(trail);
-        }
-        catch (error) {
-            throw new common_1.BadRequestException(`Failed to create trail: ${error}`);
-        }
+        const trailObject = this.trailFactory.createTrail(createTrailDto);
+        console.log(`New ${trailObject.type} trail created: ${trailObject.name}`);
+        console.log(`Safety Warning: ${trailObject.getSafetyWarning()}`);
+        console.log(`Gear Recommendation: ${trailObject.getGearRecommendation()}`);
+        const newTrailEntity = this.trailRepository.create(createTrailDto);
+        return this.trailRepository.save(newTrailEntity);
     }
     async updateTrail(id, updateTrailDto) {
         const trail = await this.trailRepository.findOne({ where: { id } });
@@ -63,6 +64,7 @@ exports.TrailsService = TrailsService;
 exports.TrailsService = TrailsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(trail_entity_1.Trail)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        trail_factory_1.TrailFactory])
 ], TrailsService);
 //# sourceMappingURL=trails.service.js.map

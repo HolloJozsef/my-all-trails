@@ -6,6 +6,9 @@ import { CreateTrailDto } from '../dto/create-trail.dto';
 import { UpdateTrailDto } from '../dto/update-trail.dto';
 import * as fs from 'fs';
 import { Trail } from '../trail.entity';
+import { TrailType } from './trail-type.enum';
+import { TrailFactory } from './trail.factory';
+import { ITrail } from './trails.interface';
 
 describe('TrailsService', () => {
   let service: TrailsService;
@@ -23,6 +26,13 @@ describe('TrailsService', () => {
     lon: -74.006,
     length: '5 miles',
     difficulty: 'Medium',
+    type:TrailType.HIKING
+  };
+
+  const mockTrailFactoryResult: ITrail = {
+    ...mockTrail,
+    getSafetyWarning:()=>{return 'mock'},
+    getGearRecommendation:()=>{return 'mock'},
   };
 
   const mockRepository = {
@@ -32,11 +42,18 @@ describe('TrailsService', () => {
     save: jest.fn(),
     delete: jest.fn(),
   };
+  const mockTrailFactory = {
+    createTrail: jest.fn().mockResolvedValue(mockTrailFactoryResult),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TrailsService,
+        {
+          provide: TrailFactory,
+          useValue: mockTrailFactory,
+        },
         {
           provide: getRepositoryToken(Trail),
           useValue: mockRepository,
@@ -64,14 +81,14 @@ describe('TrailsService', () => {
   describe('getTrailById', () => {
     it('should return a trail when given a valid id', async () => {
       const trail = await service.getTrailById(1);
-      expect(trail).toEqual(mockTrail);
+      const { id, ...expectedTrailData } = mockTrail;
+      expect(trail).toEqual(expectedTrailData);
       expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
     });
 
-    it('should return null if no trail is found', async () => {
+    it('should throw NotFoundException if no trail is found', async () => {
       jest.spyOn(mockRepository, 'findOne').mockResolvedValue(null);
-      const trail = await service.getTrailById(999);
-      expect(trail).toBeNull();
+      await expect(service.getTrailById(999)).rejects.toThrow(NotFoundException);
       expect(mockRepository.findOne).toHaveBeenCalledWith({
         where: { id: 999 },
       });
@@ -91,6 +108,7 @@ describe('TrailsService', () => {
       length: '5',
       difficulty: 'Easy',
       rating: 4,
+      type:TrailType.HIKING
     };
 
     it('should create and save a trail successfully', async () => {

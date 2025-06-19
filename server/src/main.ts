@@ -15,12 +15,11 @@ async function bootstrap() {
     .setTitle('Trails API')
     .setDescription('API documentation for the trails application')
     .setVersion('1.0')
-    .addTag('trails') // Tags help group endpoints
+    .addTag('trails')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document); // Accessible at /api/docs
-
+  SwaggerModule.setup('api/docs', app, document);
   await app.listen(process.env.PORT ?? 8080);
 }
 bootstrap();

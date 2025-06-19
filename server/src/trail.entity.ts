@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { TrailType } from './trails/trail-type.enum';
 
 @Entity('trails')
 export class Trail {
@@ -37,4 +38,11 @@ export class Trail {
 
   @Column({ name: 'image_url' })
   imageUrl: string;
+
+  @Column({
+    type: 'varchar',
+    enum: TrailType,
+    default: TrailType.HIKING,
+  })
+  type: TrailType;
 }

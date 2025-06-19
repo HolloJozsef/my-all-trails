@@ -12,13 +12,14 @@ const trails_controller_1 = require("./trails.controller");
 const trails_service_1 = require("./trails.service");
 const trail_entity_1 = require("../trail.entity");
 const typeorm_1 = require("@nestjs/typeorm");
+const trail_factory_1 = require("./trail.factory");
 let TrailsModule = class TrailsModule {
 };
 exports.TrailsModule = TrailsModule;
 exports.TrailsModule = TrailsModule = __decorate([
     (0, common_1.Module)({
         controllers: [trails_controller_1.TrailsController],
-        providers: [trails_service_1.TrailsService],
+        providers: [trails_service_1.TrailsService, trail_factory_1.TrailFactory],
         exports: [trails_service_1.TrailsService],
         imports: [typeorm_1.TypeOrmModule.forFeature([trail_entity_1.Trail])],
     })

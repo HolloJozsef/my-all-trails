@@ -19,6 +19,7 @@ const trails_controller_1 = require("./trails/trails.controller");
 const search_controller_1 = require("./search/search.controller");
 const search_service_1 = require("./search/search.service");
 const search_module_1 = require("./search/search.module");
+const trail_factory_1 = require("./trails/trail.factory");
 dotenv.config();
 let AppModule = class AppModule {
 };
@@ -34,14 +35,14 @@ exports.AppModule = AppModule = __decorate([
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
                 entities: [trail_entity_1.Trail],
-                synchronize: true,
+                synchronize: false,
             }),
             typeorm_1.TypeOrmModule.forFeature([trail_entity_1.Trail]),
             trails_module_1.TrailsModule,
             search_module_1.SearchModule,
         ],
         controllers: [app_controller_1.AppController, trails_controller_1.TrailsController, search_controller_1.SearchController],
-        providers: [app_service_1.AppService, trails_service_1.TrailsService, search_service_1.SearchService],
+        providers: [app_service_1.AppService, trails_service_1.TrailsService, search_service_1.SearchService, trail_factory_1.TrailFactory],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

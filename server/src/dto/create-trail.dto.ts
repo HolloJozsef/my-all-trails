@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsNotEmpty, Min, Max } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, Min, Max, IsEnum } from 'class-validator';
+import { TrailType } from '../trails/trail-type.enum';
 
 export class CreateTrailDto {
   @IsString()
@@ -83,4 +84,13 @@ export class CreateTrailDto {
     description: 'Image URL of the trail',
   })
   imageUrl: string;
+
+  @IsEnum(TrailType) 
+  @IsNotEmpty()
+  @ApiProperty({
+    enum: TrailType,
+    example: TrailType.HIKING,
+    description: 'The type of the trail',
+  })
+  type: TrailType;
 }

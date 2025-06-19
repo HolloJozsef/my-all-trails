@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateTrailDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
+const trail_type_enum_1 = require("../trails/trail-type.enum");
 class CreateTrailDto {
 }
 exports.CreateTrailDto = CreateTrailDto;
@@ -108,4 +109,14 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], CreateTrailDto.prototype, "imageUrl", void 0);
+__decorate([
+    (0, class_validator_1.IsEnum)(trail_type_enum_1.TrailType),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiProperty)({
+        enum: trail_type_enum_1.TrailType,
+        example: trail_type_enum_1.TrailType.HIKING,
+        description: 'The type of the trail',
+    }),
+    __metadata("design:type", String)
+], CreateTrailDto.prototype, "type", void 0);
 //# sourceMappingURL=create-trail.dto.js.map

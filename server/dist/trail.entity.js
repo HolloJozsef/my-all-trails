@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Trail = void 0;
 const typeorm_1 = require("typeorm");
+const trail_type_enum_1 = require("./trails/trail-type.enum");
 let Trail = class Trail {
 };
 exports.Trail = Trail;
@@ -62,6 +63,14 @@ __decorate([
     (0, typeorm_1.Column)({ name: 'image_url' }),
     __metadata("design:type", String)
 ], Trail.prototype, "imageUrl", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'varchar',
+        enum: trail_type_enum_1.TrailType,
+        default: trail_type_enum_1.TrailType.HIKING,
+    }),
+    __metadata("design:type", String)
+], Trail.prototype, "type", void 0);
 exports.Trail = Trail = __decorate([
     (0, typeorm_1.Entity)('trails')
 ], Trail);
