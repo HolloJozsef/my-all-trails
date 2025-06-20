@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from "react";
 import { Trail } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
-import { TrashIcon, HeartIcon as OutlineHeartIcon} from "@heroicons/react/24/outline";
+import { TrashIcon, HeartIcon as OutlineHeartIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as SolidHeartIcon } from "@heroicons/react/24/solid";
 import Rating from "../../Core/Rating";
 import ConfirmationDialog from "./modals/ConfirmationModal";
 import { useFavoritesStore } from "../../../store/favoriteStore";
+import TrailTypeIcon from "../../Core/TrailTypeIcon";
 
 const FALLBACK_IMAGE_URL = "https://media.istockphoto.com/id/495479514/photo/viso-valley.jpg?s=612x612&w=0&k=20&c=5GsMO7BU7hZZaR0LWAOcbi-d3AVpN57u6Rq0Rse3Wqk=";
 
@@ -17,18 +18,18 @@ const NearbyTrailCard: React.FC<{ trail: Trail; onDelete: (id: string) => void; 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const navigate = useNavigate();
 
-  const isFavorite = useFavoritesStore(state => state.isFavorite(trail.id)); 
+  const isFavorite = useFavoritesStore(state => state.isFavorite(trail.id));
   const addFavorite = useFavoritesStore(state => state.addFavorite);
   const removeFavorite = useFavoritesStore(state => state.removeFavorite);
 
   const handleFavoriteClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isFavorite) { 
+    if (isFavorite) {
       removeFavorite(trail.id);
     } else {
       addFavorite(trail);
     }
-  }, [isFavorite, addFavorite, removeFavorite, trail]); 
+  }, [isFavorite, addFavorite, removeFavorite, trail]);
 
 
   const handleImageError = () => {
@@ -76,6 +77,9 @@ const NearbyTrailCard: React.FC<{ trail: Trail; onDelete: (id: string) => void; 
         <p className="text-sm text-gray-500">
           Estimated Time: {trail.estimatedTime}
         </p>
+      </div>
+      <div className="flex items-center  justify-center gap-2 mb-1">
+        <TrailTypeIcon type={trail.type} className="h-5 w-5 text-gray-700 flex-shrink-0" />
       </div>
       <div className="sticky bottom-0 bg-white p-2 flex justify-center">
         <button

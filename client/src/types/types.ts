@@ -11,4 +11,11 @@ export interface Trail {
     estimatedTime: string;
     location: string;
     imageUrl: string;
+    type:TrailType
+  }
+
+  export enum TrailType {
+    HIKING = 'hiking',
+    BIKING = 'biking',
+    SCENIC = 'scenic',
   }
