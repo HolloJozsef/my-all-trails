@@ -4,10 +4,16 @@ import { TrailType } from './trail-type.enum';
 export interface ITrail {
   name: string;
   description: string;
-  difficulty: string;
+  directions: string;
+  lat: number;
+  lon: number;
   length: string;
+  difficulty: string;
+  rating: number;
+  estimatedTime: string;
   location: string;
-  type: TrailType;
+  imageUrl: string;
+  type:TrailType
 
   getSafetyWarning(): string;
   getGearRecommendation(): string;

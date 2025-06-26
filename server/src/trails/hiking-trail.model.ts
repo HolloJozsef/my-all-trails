@@ -6,17 +6,29 @@ import { TrailType } from './trail-type.enum';
 export class HikingTrail implements ITrail {
   name: string;
   description: string;
-  difficulty: string;
+  directions: string;
+  lat: number;
+  lon: number;
   length: string;
+  difficulty: string;
+  rating: number;
+  estimatedTime: string;
   location: string;
+  imageUrl: string;
   readonly type = TrailType.HIKING;
 
   constructor(data: CreateTrailDto) {
     this.name = data.name;
     this.description = data.description;
-    this.difficulty = data.difficulty;
+    this.directions = data.directions;
+    this.lat = data.lat;
+    this.lon = data.lon;
     this.length = data.length;
+    this.difficulty = data.difficulty;
+    this.rating = data.rating;
+    this.estimatedTime = data.estimatedTime;
     this.location = data.location;
+    this.imageUrl = data.imageUrl;
   }
 
   getSafetyWarning(): string {
