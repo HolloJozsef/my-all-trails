@@ -4,46 +4,42 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as fs from 'fs';
-import * as path from 'path';
 import { CreateTrailDto } from '../dto/create-trail.dto';
+import { TrailResponseDto } from '../dto/trail-response.dto';
 import { UpdateTrailDto } from '../dto/update-trail.dto';
 import { Trail } from '../trail.entity';
 import { Repository } from 'typeorm';
 import { TrailFactory } from './trail.factory';
-import { ITrail } from './trails.interface';
-import { toTrailDto } from './trail.mapper';
 
 @Injectable()
 export class TrailsService {
-  private trailsFilePath = path.join(__dirname, '../data/trails.json');
   constructor(
     @InjectRepository(Trail)
     private readonly trailRepository: Repository<Trail>,
     private readonly trailFactory: TrailFactory, 
   ) {}
 
-  getTrailsFromJSON(): any {
-    const data = fs.readFileSync(this.trailsFilePath, 'utf8');
-    return JSON.parse(data);
+  async getTrails(): Promise<TrailResponseDto[]> {
+    const trails = await this.trailRepository.find();
+    return trails.map(trail => this.mapTrailToResponseDto(trail));
   }
 
-  async getTrails(): Promise<Trail[]> {
-    return this.trailRepository.find();
-  }
-
-  async getTrailById(id: number): Promise<CreateTrailDto> {
+  async getTrailById(id: number): Promise<TrailResponseDto> {
     const trail = await this.trailRepository.findOne({ where: { id } });
     if (!trail) {
       throw new NotFoundException(`Trail with id ${id} not found`);
     }
-    return toTrailDto(trail);
+    return this.mapTrailToResponseDto(trail);
   }
 
-  async createTrail(createTrailDto: CreateTrailDto): Promise<Trail> {
+  async createTrail(createTrailDto: CreateTrailDto): Promise<TrailResponseDto> {
     try {
-      const trail = this.trailRepository.create(createTrailDto);
-      return await this.trailRepository.save(trail);
+      const trailInstance = this.trailFactory.createTrail(createTrailDto);
+      const trailEntity = this.trailRepository.create({
+        ...createTrailDto,
+      });
+      const savedTrail = await this.trailRepository.save(trailEntity);
+      return this.mapTrailToResponseDto(savedTrail);
     } catch (error) {
       throw new BadRequestException(`Failed to create trail: ${error.message}`);
     }
@@ -51,13 +47,14 @@ export class TrailsService {
   async updateTrail(
     id: number,
     updateTrailDto: UpdateTrailDto,
-  ): Promise<Trail> {
-    const trail = await this.trailRepository.findOne({ where: { id } });
-    if (!trail) {
+  ): Promise<TrailResponseDto> {
+    const result = await this.trailRepository.update(id, updateTrailDto);
+
+    if (result.affected === 0) {
       throw new NotFoundException(`Trail with id ${id} not found`);
     }
-    const updatedTrail = { ...trail, ...updateTrailDto };
-    return await this.trailRepository.save(updatedTrail);
+    // Fetch the updated entity to return the full, current state
+    return this.getTrailById(id);
   }
 
   async deleteTrail(id: number): Promise<{ message: string }> {
@@ -66,5 +63,13 @@ export class TrailsService {
       throw new NotFoundException(`Trail with id ${id} not found`);
     }
     return { message: `Trail with id ${id} deleted successfully` };
+  }
+
+  // Helper method to map Trail entity to TrailResponseDto
+  private mapTrailToResponseDto(trail: Trail): TrailResponseDto {
+    const responseDto = new TrailResponseDto();
+    // Manually assign properties to ensure type safety and contract adherence
+    Object.assign(responseDto, trail);
+    return responseDto;
   }
 }

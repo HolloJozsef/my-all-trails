@@ -10,7 +10,7 @@ import TrailTypeIcon from "../../Core/TrailTypeIcon";
 
 const FALLBACK_IMAGE_URL = "https://media.istockphoto.com/id/495479514/photo/viso-valley.jpg?s=612x612&w=0&k=20&c=5GsMO7BU7hZZaR0LWAOcbi-d3AVpN57u6Rq0Rse3Wqk=";
 
-const NearbyTrailCard: React.FC<{ trail: Trail; onDelete: (id: string) => void; }> = ({
+const NearbyTrailCard: React.FC<{ trail: Trail; onDelete: (id: number) => void; }> = ({
   trail,
   onDelete,
 }) => {

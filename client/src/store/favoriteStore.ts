@@ -3,14 +3,14 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { Trail } from '../types/types'; 
 
 interface FavoritesState {
-  favoriteTrailIds: string[];
+  favoriteTrailIds: number[];
   favoriteTrailsData: Trail[];
 }
 
 interface FavoritesActions {
   addFavorite: (trail: Trail) => void;
-  removeFavorite: (trailId: string) => void;
-  isFavorite: (trailId: string) => boolean;
+  removeFavorite: (trailId: number) => void;
+  isFavorite: (trailId: number) => boolean;
 }
 
 type FavoritesStore = FavoritesState & FavoritesActions;

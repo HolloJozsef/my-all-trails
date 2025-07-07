@@ -18,7 +18,7 @@ export const addTrail = async (trail: Partial<Trail>): Promise<void> => {
   }
 };
 
-export const deleteTrail = async (trailId: string): Promise<void> => {
+export const deleteTrail = async (trailId: number): Promise<void> => {
   axios.delete(`${API_BASE_URL}/trails/${trailId}`);
 };
 

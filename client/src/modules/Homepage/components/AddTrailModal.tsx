@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { addTrail } from "../../../api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { TrailType } from "../../../types/types";
 
 interface AddTrailModalProps {
   onClose: () => void;
@@ -19,11 +20,12 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
     lon: 0,
     length: "1",
     difficulty: "Easy",
+    type: TrailType.HIKING
   });
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: false });
@@ -83,9 +85,8 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
             type="text"
             name="name"
             placeholder="Trail Name"
-            className={`w-full border p-2 rounded ${
-              errors.name ? "border-red-500" : "border-gray-300"
-            }`}
+            className={`w-full border p-2 rounded ${errors.name ? "border-red-500" : "border-gray-300"
+              }`}
             value={formData.name}
             onChange={handleInputChange}
           />
@@ -123,6 +124,21 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
             onChange={handleInputChange}
           />
         </div>
+        <div className="flex pt-4 ">
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleInputChange}
+            className="w-full border p-2 rounded border-gray-300 bg-white "
+          >
+            {Object.values(TrailType).map((type) => (
+              <option key={type} value={type}>
+                {/* Capitalize the first letter for display */}
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="flex items-center space-x-2 pt-4 pl-2">
           <span className="text-gray-700">Rating:</span>
           <div className="flex space-x-1">
@@ -130,9 +146,8 @@ const AddTrailModal: React.FC<AddTrailModalProps> = ({ onClose }) => {
               <button
                 key={star}
                 type="button"
-                className={`text-2xl ${
-                  star <= formData.rating ? "text-yellow-400" : "text-gray-300"
-                }`}
+                className={`text-2xl ${star <= formData.rating ? "text-yellow-400" : "text-gray-300"
+                  }`}
                 onClick={() => handleRatingChange(star)}
               >
                 ★

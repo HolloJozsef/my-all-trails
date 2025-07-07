@@ -74,7 +74,7 @@ const SearchBar: FC<SearchBarProps> = ({ onSearch }) => {
             <li
               key={suggestion.id}
               className="flex items-center px-4 py-3 border-b last:border-none cursor-pointer hover:bg-gray-200 transition duration-200"
-              onClick={() => handleSuggestionClick(suggestion.id)} 
+              onClick={() => handleSuggestionClick(String(suggestion.id))} 
             >
               <img
                 src={suggestion.imageUrl}

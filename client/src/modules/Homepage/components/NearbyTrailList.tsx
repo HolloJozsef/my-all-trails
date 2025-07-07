@@ -17,7 +17,7 @@ const NearbyTrailList: React.FC = () => {
 
   const deleteMutation = useMutation({
     mutationFn: deleteTrail,
-    onSuccess: (_, deletedId) => {
+    onSuccess: (_, deletedId:number) => {
       queryClient.setQueryData<Trail[]>(["trails"], (oldData) => {
         if (!oldData) return [];
         return oldData.filter((trail) => trail.id !== deletedId);
@@ -27,7 +27,7 @@ const NearbyTrailList: React.FC = () => {
       console.error("Error deleting trail:", error);
     },
   });
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     deleteMutation.mutate(id);
   };
 

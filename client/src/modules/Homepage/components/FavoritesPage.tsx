@@ -7,7 +7,7 @@ const FavoritesPage: React.FC = () => {
   const favoriteTrailsData = useFavoritesStore(state => state.favoriteTrailsData);
   const removeFavorite = useFavoritesStore(state => state.removeFavorite);
 
-  const handleDeleteFromFavorites = (id: string) => {
+  const handleDeleteFromFavorites = (id: number) => {
     removeFavorite(id); 
   };
 

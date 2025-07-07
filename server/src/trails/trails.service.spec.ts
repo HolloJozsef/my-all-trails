@@ -3,12 +3,11 @@ import { TrailsService } from './trails.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CreateTrailDto } from '../dto/create-trail.dto';
-import { UpdateTrailDto } from '../dto/update-trail.dto';
-import * as fs from 'fs';
 import { Trail } from '../trail.entity';
 import { TrailType } from './trail-type.enum';
 import { TrailFactory } from './trail.factory';
 import { ITrail } from './trails.interface';
+import { TrailResponseDto } from '../dto/trail-response.dto';
 
 describe('TrailsService', () => {
   let service: TrailsService;
@@ -31,8 +30,8 @@ describe('TrailsService', () => {
 
   const mockTrailFactoryResult: ITrail = {
     ...mockTrail,
-    getSafetyWarning:()=>{return 'mock'},
-    getGearRecommendation:()=>{return 'mock'},
+    getSafetyWarning: () => 'mock safety warning',
+    getGearRecommendation: () => 'mock gear recommendation',
   };
 
   const mockRepository = {
@@ -41,6 +40,7 @@ describe('TrailsService', () => {
     create: jest.fn(),
     save: jest.fn(),
     delete: jest.fn(),
+    update: jest.fn(),
   };
   const mockTrailFactory = {
     createTrail: jest.fn().mockResolvedValue(mockTrailFactoryResult),
@@ -70,19 +70,23 @@ describe('TrailsService', () => {
 
   describe('getTrails', () => {
     it('should return an array of trails', async () => {
-      const trailsArray = [{ id: 1, name: 'Trail 1' }];
+      const trailsArray: Trail[] = [mockTrail];
       mockRepository.find.mockResolvedValue(trailsArray);
       const result = await service.getTrails();
-      expect(result).toEqual(trailsArray);
+      const expectedDto = new TrailResponseDto();
+      Object.assign(expectedDto, mockTrail);
+      expect(result).toEqual([expectedDto]);
       expect(mockRepository.find).toHaveBeenCalled();
     });
   });
 
   describe('getTrailById', () => {
     it('should return a trail when given a valid id', async () => {
-      const trail = await service.getTrailById(1);
-      const { id, ...expectedTrailData } = mockTrail;
-      expect(trail).toEqual(expectedTrailData);
+      mockRepository.findOne.mockResolvedValue(mockTrail);
+      const result = await service.getTrailById(1);
+      const expectedDto = new TrailResponseDto();
+      Object.assign(expectedDto, mockTrail);
+      expect(result).toEqual(expectedDto);
       expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
     });
 
@@ -112,14 +116,18 @@ describe('TrailsService', () => {
     };
 
     it('should create and save a trail successfully', async () => {
-      const createdTrail = { id: 1, ...createTrailDto };
-      mockRepository.create.mockReturnValue(createdTrail);
-      mockRepository.save.mockResolvedValue(createdTrail);
+      const savedTrailEntity = { id: 1, ...createTrailDto };
+      (mockTrailFactory.createTrail as jest.Mock).mockReturnValue(mockTrailFactoryResult);
+      mockRepository.create.mockReturnValue(createTrailDto);
+      mockRepository.save.mockResolvedValue(savedTrailEntity);
 
       const result = await service.createTrail(createTrailDto);
       expect(mockRepository.create).toHaveBeenCalledWith(createTrailDto);
-      expect(mockRepository.save).toHaveBeenCalledWith(createdTrail);
-      expect(result).toEqual(createdTrail);
+      expect(mockRepository.save).toHaveBeenCalledWith(createTrailDto);
+
+      const expectedDto = new TrailResponseDto();
+      Object.assign(expectedDto, savedTrailEntity);
+      expect(result).toEqual(expectedDto);
     });
 
     it('should throw a BadRequestException if saving fails', async () => {
@@ -133,34 +141,28 @@ describe('TrailsService', () => {
   });
 
   describe('updateTrail', () => {
-    const existingTrail = {
-      id: 1,
-      name: 'Old Trail',
-      location: 'Old Location',
-    };
-    const updateTrailDto: UpdateTrailDto = {
+    const updateTrailDto = {
       name: 'Updated Trail',
       location: 'New Location',
     };
+    const updatedTrailEntity = { ...mockTrail, ...updateTrailDto };
 
     it('should update a trail successfully', async () => {
-      mockRepository.findOne.mockResolvedValue(existingTrail);
-      mockRepository.save.mockResolvedValue({
-        ...existingTrail,
-        ...updateTrailDto,
-      });
+      mockRepository.update.mockResolvedValue({ affected: 1 });
+      // Mock the getTrailById call that happens inside updateTrail
+      const expectedDto = new TrailResponseDto();
+      Object.assign(expectedDto, updatedTrailEntity);
+      jest.spyOn(service, 'getTrailById').mockResolvedValue(expectedDto);
 
       const result = await service.updateTrail(1, updateTrailDto);
-      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
-      expect(mockRepository.save).toHaveBeenCalledWith({
-        ...existingTrail,
-        ...updateTrailDto,
-      });
-      expect(result).toEqual({ ...existingTrail, ...updateTrailDto });
+
+      expect(mockRepository.update).toHaveBeenCalledWith(1, updateTrailDto);
+      expect(service.getTrailById).toHaveBeenCalledWith(1);
+      expect(result).toEqual(expectedDto);
     });
 
     it('should throw NotFoundException if the trail does not exist', async () => {
-      mockRepository.findOne.mockResolvedValue(null);
+      mockRepository.update.mockResolvedValue({ affected: 0 });
       await expect(service.updateTrail(1, updateTrailDto)).rejects.toThrow(
         NotFoundException,
       );
@@ -180,15 +182,6 @@ describe('TrailsService', () => {
     it('should throw NotFoundException if no trail is deleted', async () => {
       mockRepository.delete.mockResolvedValue({ affected: 0 });
       await expect(service.deleteTrail(1)).rejects.toThrow(NotFoundException);
-    });
-  });
-
-  describe('getTrailsFromJSON', () => {
-    it('should return parsed JSON data from file', () => {
-      const fakeData = JSON.stringify([{ id: 1, name: 'Trail from JSON' }]);
-      jest.spyOn(fs, 'readFileSync').mockReturnValue(fakeData);
-      const result = service.getTrailsFromJSON();
-      expect(result).toEqual([{ id: 1, name: 'Trail from JSON' }]);
     });
   });
 });
